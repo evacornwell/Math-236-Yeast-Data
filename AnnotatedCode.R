@@ -237,8 +237,6 @@ lines(out[,1],out[,3],lty=1,col="blue")
 legend("bottomright",c("Obs. [EtOH]","Model [EtOH]","[Sugar]"),
        col=c("red","red","blue"),pch=c(1,NA,NA),lty=c(NA,3,1),cex=0.8)
 
-
-
 # Far into the future
 y0=c(yeast5$Cells[1],0.5681,5); times=seq(0,700,by=0.2)
 out=ode(y = y0, times, func = mod, parms=parms)
