@@ -248,3 +248,71 @@ plot(out[,1],out[,4],lty=3,col="red",type="l",ylim=c(0,10),xlab="Time (hours)",
      ylab="% ABV (L/L)")
 points(time,yeast5$trueABV,col="red")
 lines(out[,1],out[,3],lty=1,col="blue")
+
+#Univariate Sensitivity Analysis of Initial Yeast Population (in 5% ethanol)
+r=0.1
+gamma=0.001
+phi=.00000003
+omega=.000000042
+times=seq(0,25,length=100)
+parms=c(r,gamma,phi,omega)
+y0=c(41910000,0.5681,5)
+out=ode(y = y0, times, func = mod, parms=parms)
+Y=out[,2]
+tiny=1e-8
+p=c(r,gamma, phi, omega, 41910000,0.5681,5)
+dp=p*tiny
+pp=p
+npar=length(p)
+plot(1,type="n",main="Univariate Sensitivity Analysis of Initial Yeast Population",ylab="Sensitivity Analysis",xlab="Time (Hours)",ylim=c(-.3,.3),xlim=c(0,25))
+mabs=rep(0,npar); msqr=rep(0,npar)
+for (i in 1:npar){
+  pstar=pp[i]+dp[i]      
+  p[i]=pstar  
+  y0=c(p[5],p[6],p[7])
+  w=c(p[1],p[2],p[3],p[4])
+  outstar=ode(y0,times,mod,w)
+  Ystar=outstar[,2]
+  sens=(Ystar-Y)/(pstar-pp[i])*pp[i]/Y 
+  p[i]=pp[i]        
+  lines(times,sens,col=i)
+  mabs[i]=mean(abs(sens))
+  msqr[i]=sqrt(sum(sens^2)/length(sens))
+}
+legend("topright",c("r","gamma","phi","omega","Initial Population","Initial Glucose","Initial Ethanol"),lty=1,col=1:7,cex=0.7)
+
+format(data.frame(p,mabs,msqr),digits=2)
+
+#Univariate Sensitivity Analysis of Initial Ethanol Concentration (in 5% ethanol)
+r=0.1
+gamma=0.001
+phi=.00000003
+omega=.000000042
+times=seq(0,25,length=100)
+parms=c(r,gamma,phi,omega)
+y0=c(41910000,0.5681,5)
+out=ode(y = y0, times, func = mod, parms=parms)
+E=out[,4]
+tiny=1e-8
+p=c(r,gamma, phi, omega, 41910000,0.5681,5)
+dp=p*tiny
+pp=p
+npar=length(p)
+plot(1,type="n",ylab="Sensitivity Analysis",main="Univariate Sensitivity Analysis Initial Ethanol Concentration",xlab="Time (Hours)",ylim=c(-1,1),xlim=c(0,25))
+mabs=rep(0,npar); msqr=rep(0,npar)
+for (i in 1:npar){
+  pstar=pp[i]+dp[i]      
+  p[i]=pstar  
+  y0=c(p[5],p[6],p[7])
+  w=c(p[1],p[2],p[3],p[4])
+  outstar=ode(y0,times,mod,w)
+  Estar=outstar[,4]
+  sens=(Estar-E)/(pstar-pp[i])*pp[i]/E 
+  p[i]=pp[i]        
+  lines(times,sens,col=i)
+  mabs[i]=mean(abs(sens))
+  msqr[i]=sqrt(sum(sens^2)/length(sens))
+}
+legend("topright",c("r","gamma","phi","omega","Initial Population","Initial Glucose","Initial Ethanol"),lty=1,col=1:7,cex=0.7)
+format(data.frame(p,mabs,msqr),digits=2)
+
