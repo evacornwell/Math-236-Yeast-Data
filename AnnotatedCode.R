@@ -238,6 +238,7 @@ legend("bottomright",c("Obs. [EtOH]","Model [EtOH]","[Sugar]"),
        col=c("red","red","blue"),pch=c(1,NA,NA),lty=c(NA,3,1),cex=0.8)
 
 # Far into the future
+#Extrapolates the model to see how the yeast population is predicted to perform in the long run
 y0=c(yeast5$Cells[1],0.5681,5); times=seq(0,700,by=0.2)
 out=ode(y = y0, times, func = mod, parms=parms)
 plot(out[,1],out[,2],type="l",xlab="Time (hours)",ylab="Population",ylim=c(0,56540000),xlim=c(0,700))
@@ -249,7 +250,9 @@ plot(out[,1],out[,4],lty=3,col="red",type="l",ylim=c(0,10),xlab="Time (hours)",
 points(time,yeast5$trueABV,col="red")
 lines(out[,1],out[,3],lty=1,col="blue")
 
+############
 #Univariate Sensitivity Analysis of Initial Yeast Population (in 5% ethanol)
+############
 r=0.1
 gamma=0.001
 phi=.00000003
@@ -283,7 +286,9 @@ legend("topright",c("r","gamma","phi","omega","Initial Population","Initial Gluc
 
 format(data.frame(p,mabs,msqr),digits=2)
 
+################
 #Univariate Sensitivity Analysis of Initial Ethanol Concentration (in 5% ethanol)
+################
 r=0.1
 gamma=0.001
 phi=.00000003
